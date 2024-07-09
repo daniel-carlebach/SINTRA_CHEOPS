@@ -1,6 +1,6 @@
 name = "SINTRA_CHEOPS"
 uuid = "b9d4c13a-1456-45e7-8955-0a62e6e8cad7"
-authors = ["Daniel Carlebach <danieldcarlebach@gmail.com>"]
+authors = ["Daniel Carlebach <dcarleba@umich.edu>"]
 version = "0.1.0"
 
 [deps]
