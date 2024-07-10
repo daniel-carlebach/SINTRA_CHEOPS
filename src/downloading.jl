@@ -129,11 +129,13 @@ end
 Download corrected subarray FITS file for a CHEOPS observation with a given `file_key`
 and extract it to `[SINTRA_CHEOPS.fits_dir]/[file_key].fits`. If `SINTRA_CHEOPS.fits_dir` 
 has not been set yet, it is set to a temporary directory that will be deleted
-next time Julia is closed. `SINTRA_CHEOPS.cheops_visits_path` must be set and populated
-before calling this function.
+next time Julia is closed.
 """
 function download_images(file_key)
-    @assert !isempty(cheops_visits_path)
+    if isempty(cheops_visits_path)
+        download_cheops_visits()
+    end
+
     cheops_visits = CSV.read(cheops_visits_path, DataFrame)
 
     rootpath = cheops_visits[cheops_visits.file_key.==file_key, :file_rootpath][1]

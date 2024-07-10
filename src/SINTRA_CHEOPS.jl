@@ -6,6 +6,8 @@ using SatelliteToolbox, ProgressMeter
 using ImageContrastAdjustment, ImageBinarization, ImageFiltering
 
 export download_tles, download_satcat, download_cheops_visits, download_images, read_fits
+export contrast_image, binarize_image, find_streaks
+export full_tle_analysis, make_tables
 
 "Path of file containing information about CHEOPS visits"
 cheops_visits_path = ""

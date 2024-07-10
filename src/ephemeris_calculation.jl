@@ -1,8 +1,10 @@
 "112.5 arcsec or 0.03125°"
 const fov_half_angle = π / 5760
 
-function read_tle_separate_cheops(filename)
-    all_tles = read_tles_from_file(filename)
+function read_tle_separate_cheops(file_key)
+    @assert !isempty(tle_dir)
+
+    all_tles = read_tles_from_file(joinpath(tle_dir, "$file_key.txt"))
     cheops_tle = all_tles[getproperty.(all_tles, :satellite_number).==44874][end]
     tles = all_tles[getproperty.(all_tles, :satellite_number).!=44874]
     return (cheops_tle, tles)
@@ -85,12 +87,12 @@ correct information. Supprots progress logging and multiprocessing.
 following the DACE CHEOPS database.
 """
 function full_tle_analysis(filekey; showprogress=true, multiprocess=true)
-    fits = read_fits(joinpath(datadir, "fits", "$filekey.fits"))
-    cheops_tle, tles = read_tle_separate_cheops(joinpath(datadir, "tle", "$filekey.txt"))
+    fits = read_fits(filekey)
+    cheops_tle, tles = read_tle_separate_cheops(filekey)
 
     start_time, end_time = extrema(fits.time)
 
-    cheops_visits = CSV.read(joinpath(dirname(pathof(SINTRA_CHEOPS)), "..", "data", "cheops_visits.csv"), DataFrame)
+    cheops_visits = CSV.read(cheops_visits_path, DataFrame)
     α = cheops_visits[cheops_visits.file_key.==filekey, :α][1]
     δ = cheops_visits[cheops_visits.file_key.==filekey, :δ][1]
 

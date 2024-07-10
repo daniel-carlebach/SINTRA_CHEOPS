@@ -12,14 +12,14 @@ regex `CH_PR\\d{6}_TG\\d{6}_V0300` if you are following the DACE CHEOPS database
 current CHEOPS observation that contain streaks. The first frame is index 1.
 """
 function make_tables(filekey, tle_analysis_result, streak_frame_idx)
-    fits = read_fits(joinpath(datadir, "fits", filekey * ".fits"))
+    fits = read_fits(filekey)
     fits.visible_streak .= false
     fits[streak_frame_idx, :visible_streak] .= true
     select!(fits, Not(:image))
 
-    cheops_tle, tles = read_tle_separate_cheops(joinpath(datadir, "tle", "$filekey.txt"))
+    cheops_tle, tles = read_tle_separate_cheops(filekey)
 
-    cheops_visits = CSV.read(joinpath(dirname(pathof(SINTRA_CHEOPS)), "..", "data", "cheops_visits.csv"), DataFrame)
+    cheops_visits = CSV.read(cheops_visits_path, DataFrame)
     tle_analysis_result.right_ascension .= rad2deg(cheops_visits[cheops_visits.file_key.==filekey, :α][1])
     tle_analysis_result.declination .= rad2deg(cheops_visits[cheops_visits.file_key.==filekey, :δ][1])
 
@@ -44,7 +44,7 @@ function make_tables(filekey, tle_analysis_result, streak_frame_idx)
         row.cheops_sun_angle = angle_cheops_to_sun(tle, cheops_tle, row.time) |> rad2deg
     end
 
-    satcat = JSON.parsefile(joinpath(datadir, "satcat.json")) |> DataFrame
+    satcat = JSON.parsefile(satcat_path) |> DataFrame
     max_id = maximum(parse.(Int, satcat.NORAD_CAT_ID))
     tle_analysis_result = tle_analysis_result[tle_analysis_result.sat_number.<max_id, :]
 
