@@ -5,14 +5,19 @@ using PythonCall, FITSIO, CSV, JSON, Tar, DataFrames
 using SatelliteToolbox, ProgressMeter
 using ImageContrastAdjustment, ImageBinarization, ImageFiltering
 
+export download_tles, download_satcat, download_cheops_visits, download_images, read_fits
 
+"Path of file containing information about CHEOPS visits"
+cheops_visits_path = ""
 
-export download_tles, get_cheops_visits, download_images
+"Path of file containing catalog of tracked resident space objects"
+satcat_path = ""
 
+"Directory containing FITS files with CHEOPS images"
+fits_dir = ""
 
-# TODO: replace this with an environment variable or something
-"Directory with subdirectories for FITS and TLEs"
-const datadir = "c:/Users/danie/code/sure/cheops/data"
+"Directory containing files with TLE tracking data during CHEOPS observations"
+tle_dir = ""
 
 include("downloading.jl")
 include("image_processing.jl")
