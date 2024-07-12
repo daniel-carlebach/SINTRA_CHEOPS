@@ -1,7 +1,7 @@
 module SINTRA_CHEOPS
 
 using Dates, Statistics, LinearAlgebra, Distributed
-using PythonCall, FITSIO, CSV, JSON, Tar, DataFrames
+using FITSIO, CSV, JSON, Tar, DataFrames
 using SatelliteToolbox, ProgressMeter
 using ImageContrastAdjustment, ImageBinarization, ImageFiltering
 
