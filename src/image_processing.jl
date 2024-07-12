@@ -108,16 +108,18 @@ function find_local_maxima(hough_domain; vote_threshold=60, max_count=5, window=
 end
 
 "Find all straight line streaks in a CHEOPS image and return their radius and angle"
-function find_streaks(image)
+function find_streaks(image; remove_circles=false)
     binarized = binarize_image(image)
 
-    circle_hough = circle_hough_transform(binarized)
-    circle_maxima = find_local_maxima(circle_hough, vote_threshold=70)
-    circle_mask = any(
-        [(x - tpl[1])^2 + (y - tpl[2])^2 <= psf_radius^2
-         for x in 1:200, y in 1:200, tpl in Tuple.(circle_maxima)],
-        dims=3)[:, :, 1]
-    binarized[circle_mask] .= false
+    if remove_circles
+        circle_hough = circle_hough_transform(binarized)
+        circle_maxima = find_local_maxima(circle_hough, vote_threshold=70)
+        circle_mask = any(
+            [(x - tpl[1])^2 + (y - tpl[2])^2 <= psf_radius^2
+             for x in 1:200, y in 1:200, tpl in Tuple.(circle_maxima)],
+            dims=3)[:, :, 1]
+        binarized[circle_mask] .= false
+    end
 
     hough = line_hough_transform(binarized)
     maxima = find_local_maxima(hough, vote_threshold=60, window=35)
